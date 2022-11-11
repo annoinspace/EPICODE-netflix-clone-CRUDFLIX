@@ -1,55 +1,90 @@
-fetch("https://striveschool-api.herokuapp.com/api/movies", {
+// fetch("https://striveschool-api.herokuapp.com/api/movies", {
+//   headers: {
+//     Authorization:
+//       "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MzZlMTk5Y2Y4MGYxYTAwMTVkOGEwNDAiLCJpYXQiOjE2NjgxNTk5MDAsImV4cCI6MTY2OTM2OTUwMH0.w4pMIn-xdzD1sPgqoESBbbpirfquHjeifJ0TmqSCBSk"
+//   }
+// })
+
+const options = {
+  method: "GET",
   headers: {
     Authorization:
-      "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MzZlMTk5Y2Y4MGYxYTAwMTVkOGEwNDAiLCJpYXQiOjE2NjgxNTk5MDAsImV4cCI6MTY2OTM2OTUwMH0.w4pMIn-xdzD1sPgqoESBbbpirfquHjeifJ0TmqSCBSk"
+      "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MzZlMTk5Y2Y4MGYxYTAwMTVkOGEwNDAiLCJpYXQiOjE2NjgxNTk5MDAsImV4cCI6MTY2OTM2OTUwMH0.w4pMIn-xdzD1sPgqoESBbbpirfquHjeifJ0TmqSCBSk",
+    "Content-Type": "application/json"
   }
-})
-
-const loadGenres = () => {
-  fetch("https://striveschool-api.herokuapp.com/api/movies", {
-    headers: {
-      method: "GET",
-      Authorization:
-        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MzZlMTk5Y2Y4MGYxYTAwMTVkOGEwNDAiLCJpYXQiOjE2NjgxNTk5MDAsImV4cCI6MTY2OTM2OTUwMH0.w4pMIn-xdzD1sPgqoESBbbpirfquHjeifJ0TmqSCBSk"
-    }
-  })
-    .then((response) => response.json())
-    .then((genres) => {
-      console.log(genres)
-      displayGenres(genres)
-    })
-    .catch((error) => {
-      console.log(error)
-    })
 }
 
-const loadMovies = () => {
-  fetch(`https://striveschool-api.herokuapp.com/api/movies/${id}`, {
-    headers: {
-      method: "GET",
-      Authorization:
-        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MzZlMTk5Y2Y4MGYxYTAwMTVkOGEwNDAiLCJpYXQiOjE2NjgxNTk5MDAsImV4cCI6MTY2OTM2OTUwMH0.w4pMIn-xdzD1sPgqoESBbbpirfquHjeifJ0TmqSCBSk"
-    }
-  })
-    .then((response) => response.json())
-    .then((movie_genre) => {
-      console.log(movie_genre)
-      displayGenres(movie_genre)
-    })
-    .catch((error) => {
-      console.log(error)
-    })
+async function getCategories() {
+  const response = await fetch(
+    "https://striveschool-api.herokuapp.com/api/movies",
+    options
+  )
+  const categories = await response.json()
+  console.log(categories)
+  return categories
 }
 
-const selectGenre = (genre) => {}
+function renderCategories(listOfCategories) {
+  let carouselContainer = document.getElementById("main-container")
 
-const displayGenres = (genres) => {
-  let mainContainer = document.getElementById("main-container")
-
-  let newGenre = document.createElement("div")
-
-  genres.forEach((genre) => {
-    newGenre.classList.add("movie-gallery", "m-2")
-    newGenre.innerHTML = `  <h5 class="text-light", "mt-2", "mb-2">Trending Now</h5>`
+  listOfCategories.forEach((category) => {
+    const categorySection = document.createElement("div")
+    categorySection.innerHTML = `
+        <h5 class="text-light mt-2 mb-2">${category}</h5>
+        <div class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                 <div class="carousel-item active">
+                     <div class="movie-row">
+                          <div class="row" id="${category}">
+                          </div>
+                     </div>
+                 </div>
+            </div>
+        </div>
+        `
+    carouselContainer.appendChild(categorySection)
   })
+  listOfCategories.forEach((category) => {
+    fetch(
+      `https://striveschool-api.herokuapp.com/api/movies/${category}`,
+      options
+    )
+      .then((response) => {
+        return response.json()
+      })
+      .then((movies) => {
+        console.log(movies)
+        let row = document.getElementById(`${category}`)
+        movies.forEach((movie) => {
+          row.innerHTML += `<div class="col-md-2">
+        <img class="movie-cover" src="${movie.imageUrl}" />
+        </div>`
+        })
+      })
+  })
+}
+
+// const loadMovies = () => {
+//   fetch(`https://striveschool-api.herokuapp.com/api/movies/${id}`, {
+//     headers: {
+//       method: "GET",
+//       Authorization:
+//         "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MzZlMTk5Y2Y4MGYxYTAwMTVkOGEwNDAiLCJpYXQiOjE2NjgxNTk5MDAsImV4cCI6MTY2OTM2OTUwMH0.w4pMIn-xdzD1sPgqoESBbbpirfquHjeifJ0TmqSCBSk",
+
+//       "Content-Type": "application/json"
+//     }
+//   })
+//     .then((response) => response.json())
+//     .then((movie_genre) => {
+//       console.log(movie_genre)
+//       displayGenres(movie_genre)
+//     })
+//     .catch((error) => {
+//       console.log(error)
+//     })
+// }
+
+window.onload = async () => {
+  const categories = await getCategories()
+  renderCategories(categories)
 }

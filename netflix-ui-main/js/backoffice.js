@@ -1,4 +1,4 @@
-async function onFormSubmit(event) {
+async function onFormSubmit(event, form) {
   event.preventDefault()
 
   const newMovie = {
@@ -25,6 +25,7 @@ async function onFormSubmit(event) {
     const response = await fetch(endpoint, options)
     if (response.ok) {
       alert("new movie added")
+      form.reset()
     } else {
       throw new Error("Error while creating new movie")
     }
