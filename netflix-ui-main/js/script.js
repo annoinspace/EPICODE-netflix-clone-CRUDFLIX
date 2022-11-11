@@ -24,7 +24,7 @@ const loadGenres = () => {
 }
 
 const loadMovies = () => {
-  fetch(`https://striveschool-api.herokuapp.com/api/movies/${movie_genre}`, {
+  fetch(`https://striveschool-api.herokuapp.com/api/movies/${id}`, {
     headers: {
       method: "GET",
       Authorization:

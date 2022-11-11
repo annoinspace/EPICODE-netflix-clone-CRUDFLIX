@@ -156,7 +156,7 @@
             <h1 class="text-white text-center m-5">Back Office</h1>
          <div class="col-12"></div>
         <div class="col-12 text-white">
-            <form>
+            <form onsubmit="updateMovie(event,this)">
                 <div class="mb-3">
                     <label for="name" class="form-label">Movie Name</label>
                     <input type="text" class="form-control" id="name" name="name">
@@ -170,10 +170,10 @@
                     <input type="text" class="form-control" id="genre" name="genre">
                 </div>
                 <div class="mb-3">
-                    <label for="image" class="form-label">Image URL</label>
-                    <input type="text" class="form-control" id="image" name="image">
+                    <label for="imageUrl" class="form-label">Image URL</label>
+                    <input type="text" class="form-control" id="imageUrl" name="imageUrl">
                 </div>
-                <button type="submit" class="btn btn-primary">Add Movie</button>
+                <button id="submit-button" type="submit" class="btn btn-primary" onclick="onFormSubmit(event,form)">Add Movie</button>
             </form>
         </div>
 
